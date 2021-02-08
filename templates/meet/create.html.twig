@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(meetingForm) }}
+    {{ form_row(meetingForm.title) }}
+
+    {{ form_widget(meetingForm) }}
+
+    <button type="submit" class="btn btn-success">Создрать встречу</button>
+    {{ form_end(meetingForm) }}
+{% endblock %}
+
+{% block title %}Создание встречи{% endblock %}
+

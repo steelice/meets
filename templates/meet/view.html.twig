@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="meeting-body">
+        <div class="row">
+            <div class="meeting-info col">
+                <h1>{{ meeting.title }}</h1>
+                <div class="author">Создатель: {{ meeting.user.email }}</div>
+
+                <div class="meeting-location">Место проведения: {{ meeting.location }}</div>
+                <div class="meeting-date">Дата проведения: {{ meeting.beginsAt|date('d.m.Y H:i') }}</div>
+
+                <div class="meeting-description">
+                    {{ meeting.description }}
+                </div>
+
+                {% if meeting.galleryPhotos %}
+                    <div class="gallery">
+                        {% for photo in meeting.galleryPhotos %}
+                            <div class="gallery-item">
+                                <img src="{{ asset(fileStorage.fileUrl(photo)) }}" alt="" class="gallery-item">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col">
+                {% if is_granted('MEETING_VISIT', meeting) %}
+                    {% if imGoing %}
+                        <div class="alert alert-success">Вы идёте на эту встречу</div>
+                    {% else %}
+                        <form action="{{ path('meeting_visit', {url: meeting.url}) }}" method="post">
+                            <input type="hidden" name="_csrf_token"
+                                   value="{{ csrf_token('visit') }}"
+                            >
+                            <button class="btn btn-primary" type="submit">
+                                Я приду!
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                <h5>Участники</h5>
+                {% for visitor in meeting.meetingVisitors %}
+                    <span class="badge bg-light text-dark">
+                        {{ visitor.user.email }}
+                    </span>
+                {% else %}
+                    <div class="alert alert-info">
+                        Пока ни один человек не заявил о своем присутствии
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="comments">
+            <h3>Комментарии</h3>
+
+            {% if app.user %}
+                {{ form_start(commentForm) }}
+                {{ form_widget(commentForm) }}
+                <button class="btn btn-primary" type="submit">Отправить комментарий</button>
+                {{ form_end(commentForm) }}
+            {% else %}
+                <div class="alert alert-warning">
+                    Чтобы добавлять комментарии <a href="{{ path('login') }}">войдите</a>.
+                </div>
+            {% endif %}
+
+            {% for comment in comments %}
+
+                <div class="comment{{ comment.isApproved ? '' : ' wait-for-approve' }}">
+                    <div class="comment-body">
+                        <div class="comment-title">{{ comment.createdAt|date('d.m.Y H:i') }} | {{ comment.user.email }}:
+                        </div>
+                        {{ comment.text }}
+                        {% if not comment.isApproved %}
+                            <div><span class="badge bg-warning">
+                                комментарий на рассмотрении
+                                </span></div>
+                        {% endif %}
+                    </div>
+                    {% if is_granted('APPROVE_COMMENT', comment) or is_granted('DENY_COMMENT', comment) %}
+                        <div class="comment-admin">
+                            {% if is_granted('APPROVE_COMMENT', comment) %}
+                                <a href="{{ path('comment_approve', {id: comment.id, hash: comment.approveHash}) }}"
+                                   class="btn btn-sm btn-success">подтвердить комментарий</a>
+                            {% endif %}
+                            {% if is_granted('DENY_COMMENT', comment) %}
+                                <a href="{{ path('comment_deny', {id: comment.id, hash: comment.approveHash}) }}"
+                                   class="btn btn-sm btn-danger">удалить комментарий</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <div class="alert alert-warning">Комментариев ещё нет</div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Просмотр встречи: {{ meeting.title }}
+{% endblock %}
+

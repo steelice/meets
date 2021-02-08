@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Встречатор{% endblock %}
+
+{% block body %}
+
+    <div class="meetings">
+        {% for meeting in meetings %}
+            <div class="meeting row">
+                <div class="col">
+                    {% if meeting.mainPhoto %}
+                        <a href="{{ path('meeting_view', {url: meeting.url}) }}">
+                            <img src="{{ asset(fileStorage.fileUrl(meeting.mainPhoto)) }}" alt=""
+                                 class="img-thumbnail meeting-photo-preview">
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col">
+                    <span class="author">{{ meeting.user.email }}</span>:
+                    <a href="{{ path('meeting_view', {url: meeting.url}) }}">{{ meeting.title }}</a>
+                    <div class="meeting-date">
+                        Дата проведения:
+                        {{ meeting.beginsAt|date('d.m.Y H:i') }}
+                    </div>
+                    <div class="meeting-location">Место проведения: {{ meeting.location }}</div>
+
+                    <div class="meeting-stat">
+                        Комментариев: {{ meeting.totalComments }}
+                        Посетителей: {{ meeting.usersGoing }}
+                        Фотографий: {{ meeting.galleryPhotos|length }}
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if previous >= 0 %}
+        <a href="{{ path('index', { skip: previous }) }}">Previous</a>
+    {% endif %}
+
+    {% if next < meetings|length %}
+        <a href="{{ path('index', { skip: next }) }}">Next</a>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,32 @@
+@import "~bootstrap/scss/bootstrap";
+
+.comment {
+  padding: 2em 0;
+}
+
+.meeting-body {
+  .meeting-description {
+    font-size: 1.5em;
+  }
+
+  .comments {
+    margin-top: 1em;
+  }
+}
+
+.comment.wait-for-approve {
+  .comment-body {
+    opacity: 0.6;
+  }
+}
+
+
+.meetings {
+  .meeting {
+    padding: 1em 0;
+    border-bottom: 1px solid #eeeeee;
+  }
+  .meeting-photo-preview {
+    max-width: 200px;
+  }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Встречатор!{% endblock %}</title>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ path('index') }}">Встречатор</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('index') }}">Все встречи</a>
+                    </li>
+
+                </ul>
+                <div class="d-flex">
+                    {% if app.user %}
+                        <a class="btn btn-outline-success" href="{{ path('meeting_create') }}">Назначить встречу</a>
+                        <a class="btn btn-outline-danger" href="{{ path('logout') }}">Выйти</a>
+                    {% else %}
+                        <a class="btn btn-outline-success" href="{{ path('login') }}">Войти</a>
+                        <a class="btn btn-outline-info" href="{{ path('register') }}">Зарегистрироваться</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block body %}{% endblock %}
+
+</div>
+</body>
+</html>
