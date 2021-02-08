@@ -16,5 +16,5 @@
 symfony composer install
 yarn install
 ```
-* В файле `.env.local` прописать `DATABASE_URL` и `MAILER_DSN`
+* В файле `.env.local` прописать `DATABASE_URL`, `MESSENGER_TRANSPORT_DSN` и `MAILER_DSN`
 * применить миграции: ```symfony console doctrine:migrations:migrate```
